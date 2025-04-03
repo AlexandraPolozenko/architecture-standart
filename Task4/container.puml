@@ -1,0 +1,35 @@
+@startuml
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(client, "Клиент")
+Person(cc_operator, "Оператор КЦ")
+Person_Ext(cc_ext_operator, "Оператор партнерского КЦ")
+
+Container_Boundary(Deposit, "Сервис депозитов (потенциально и кредитов)") {
+  Container(deposit, "Cервис депозитов", "C#", "Микросервис для работы с депозитами")
+  ContainerDb(deposit_db, "БД сервиса депозитов", "MS SQL", "База данных сервиса депозитов")
+}
+
+ContainerDb(abs, "БД АБС", "Oracle", "База данных АБС")
+
+System(cc, "CRM банка", "Система Колл-Центра")
+System_Ext(cc_ext, "Партнерская CRM", "Система партнерского Колл-Центра")
+
+BiRel(client, cc_operator, "Консультируется про ставки")
+BiRel(client, cc_ext_operator, "Консультируется про ставки")
+
+
+Rel(deposit, deposit_db, "Чтение/запись данных БД")
+Rel(deposit, abs, "Получить список депозитов")
+
+
+Rel(cc, deposit, "Получить список депозитов")
+Rel(deposit, cc_ext, "Отправить список депозитов [SFTP]")
+
+Rel(cc_operator, cc, "Обработка заявок клиентов")
+Rel(cc_ext_operator, cc_ext, "Обработка заявок клиентов")
+
+@enduml
