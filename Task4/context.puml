@@ -1,0 +1,25 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+top to bottom direction
+
+Person(client, "Клиент")
+Person(cc_operator, "Оператор КЦ")
+Person_Ext(cc_ext_operator, "Оператор партнерского КЦ")
+
+System(abs, "АБС", "АБС")
+System(cc, "CRM банка", "Система Колл-Центра")
+System_Ext(cc_ext, "Партнерская CRM", "Система партнерского Колл-Центра")
+
+BiRel(client, cc_operator, "Консультируется про ставки")
+BiRel(client, cc_ext_operator, "Консультируется про ставки")
+
+Rel(cc, abs, "Получить список депозитов")
+Rel(abs, cc_ext, "Отправить список депозитов")
+
+Rel(cc_operator, cc, "Обработка заявок клиентов")
+Rel(cc_ext_operator, cc_ext, "Обработка заявок клиентов")
+
+
+@enduml

@@ -1,0 +1,35 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+top to bottom direction
+
+Person(client, "Клиент", "Клиент банка")
+Person(manager, "Менеджер", "Менеджер депозитов")
+Person(cc_operator, "Оператор", "Оператор КЦ")
+
+System(website, "Сайт", "Сайт банка")
+System(bank, "Интернет-банк", "Интернет-банк")
+System(abs, "АБС", "АБС")
+System(cc, "Система Колл-Центра", "Система Колл-Центра")
+System(sms, "СМС-шлюз", "СМС-шлюз")
+System_Ext(telecom, "Телеком-оператор", "Внешний телеком-оператор")
+
+Rel(client, website, "Получить список депозитов или создать заявку на депозит")
+Rel(client, bank, "Получить список депозитов или создать заявку на депозит")
+
+Rel(website, abs, "Получить список депозитов")
+Rel(bank, abs, "Получить список депозитов или создать заявку на депозит")
+Rel(website, cc, "Создать заявку на депозит для оператора КЦ")
+
+Rel(cc, abs, "Создать заявку на депозит, подтвердить заявку")
+Rel(cc_operator, cc, "Обработка заявок на депозит")
+Rel(cc_operator, client, "Звонок для подтверждения заявки")
+
+Rel(manager, abs, "Работа с заявками на депозит")
+Rel(abs, sms, "Отправка смс для подтверждения заявки или уведомлений")
+
+Rel(sms, telecom, "Отправка смс через провайдера")
+Rel(telecom, client, "Отправка смс клиенту")
+
+@enduml

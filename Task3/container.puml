@@ -1,0 +1,46 @@
+@startuml
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(client, "Клиент", "Клиент банка")
+Person(manager, "Менеджер", "Менеджер депозитов")
+
+Container_Boundary(Bank, "Интернет-банк") {
+  Container(interface, "Интерфейс интернет-банка", "HTML, CSS, JS", "Веб приложение")
+  Container(bank_app, "Приложение интернет-банка", "C#", "Бэкенд ")
+  ContainerDb(bank_db, "БД интернет-банка", "MS SQL", "База данных интернет-банка")
+}
+
+Container_Boundary(Deposit, "Сервис депозитов (потенциально и кредитов)") {
+  Container(deposit, "Cервис депозитов", "C#", "Микросервис для работы с депозитами")
+  ContainerDb(deposit_db, "БД сервиса депозитов", "MS SQL", "База данных сервиса депозитов")
+}
+
+Container_Boundary(ABS, "АБС") {
+  Container(abs, "Интерфейс АБС", "Delphi", "Интерфейс АБС для менеджеров бэк-офиса")
+  ContainerDb(abs_db, "БД АБС", "Oracle", "База данных АБС")
+}
+
+System_Ext(sms, "СМС-шлюз + телеком оператор")
+
+Rel(client, interface, "Получить список депозитов или создать заявку на депозит")
+
+Rel(interface, bank_app, "[HTTPS]")
+Rel(bank_app, bank_db, "Чтение/запись данных БД")
+
+Rel(bank_app, deposit, "Получить список депозитов")
+Rel(bank_app, abs, "Создать заявку на депозит")
+
+Rel(deposit, deposit_db, "Чтение/запись данных БД")
+Rel(deposit, abs, "Получить список депозитов")
+
+Rel(manager, abs, "Работа с заявками на депозит")
+Rel(abs, abs_db, "Чтение/запись данных БД")
+
+Rel(abs, sms, "Отправка смс через провайдера")
+Rel(sms, client, "Отправка смс клиенту")
+
+
+@enduml
